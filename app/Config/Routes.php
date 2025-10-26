@@ -28,6 +28,9 @@ $routes->post('forgot-password', 'AuthController::forgotPassword');
 
 // Email verification route
 $routes->get('verify-email', 'AuthController::verifyEmail');
+$routes->post('register-test', 'AuthController::registerTest');
+$routes->get('register-simple', 'AuthController::registerSimple');
+$routes->post('register-simple', 'AuthController::registerSimple');
 
 // Include Shield's default routes for other functionality
 service('auth')->routes($routes);
@@ -42,3 +45,7 @@ $routes->group('admin', ['filter' => 'permission:admin.access'], function ($rout
 $routes->group('pos', ['filter' => 'permission:pos.use'], function ($routes) {
     $routes->get('/', 'POS::index');
 });
+
+// Working registration routes (the main one)
+$routes->get('register', 'FinalAuthController::register');
+$routes->post('register', 'FinalAuthController::register');

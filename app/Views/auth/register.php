@@ -313,7 +313,7 @@
             
             <!-- PASSWORD FIELD -->
             <div class="form-group">
-                <label for="password">Password</label>
+        <label for="password">Password</label>
                 <div class="password-field">
                     <input 
                         type="password" 
@@ -343,7 +343,7 @@
             
             <!-- CONFIRM PASSWORD FIELD -->
             <div class="form-group">
-                <label for="password_confirm">Confirm Password</label>
+        <label for="password_confirm">Confirm Password</label>
                 <div class="password-field">
                     <input 
                         type="password" 

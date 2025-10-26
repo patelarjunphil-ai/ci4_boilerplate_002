@@ -75,20 +75,34 @@ class NotificationService
             // Set email subject
             $this->email->setSubject('Welcome to ' . config('Email')->fromName);
             
-            // Prepare email data for the template
-            $emailData = [
-                'username' => $username,
-                'userEmail' => $userEmail,
-                'verificationLink' => $verificationLink,
-                'appName' => config('Email')->fromName,
-                'currentYear' => date('Y')
-            ];
+            // Create simple HTML message
+            $message = '
+            <html>
+            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                    <h1 style="color: #667eea;">Welcome to ' . config('Email')->fromName . '!</h1>
+                    <p>Hello <strong>' . $username . '</strong>,</p>
+                    <p>Thank you for registering with us! Your account has been created successfully.</p>';
             
-            // Load and render the email template
-            $emailBody = view('emails/welcome', $emailData);
+            if ($verificationLink) {
+                $message .= '
+                    <p>Please verify your email address by clicking the button below:</p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="' . $verificationLink . '" style="background-color: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block;">Verify Email Address</a>
+                    </div>';
+            }
+            
+            $message .= '
+                    <p>If you have any questions, please don\'t hesitate to contact us.</p>
+                    <p>Best regards,<br>The ' . config('Email')->fromName . ' Team</p>
+                    <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+                    <p style="font-size: 12px; color: #666;">This email was sent to ' . $userEmail . '</p>
+                </div>
+            </body>
+            </html>';
             
             // Set the email body
-            $this->email->setMessage($emailBody);
+            $this->email->setMessage($message);
             
             // Send the email
             $result = $this->email->send();
@@ -131,22 +145,38 @@ class NotificationService
             // Set email subject
             $this->email->setSubject('New Login Activity - ' . config('Email')->fromName);
             
-            // Prepare email data for the template
-            $emailData = [
-                'username' => $username,
-                'userEmail' => $userEmail,
-                'loginTime' => $loginTime,
-                'ipAddress' => $ipAddress,
-                'userAgent' => $userAgent,
-                'appName' => config('Email')->fromName,
-                'currentYear' => date('Y')
-            ];
-            
-            // Load and render the email template
-            $emailBody = view('emails/login_notification', $emailData);
+            // Create simple HTML message
+            $message = '
+            <html>
+            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                    <h1 style="color: #dc3545;">🔒 Security Alert</h1>
+                    <p>Hello <strong>' . $username . '</strong>,</p>
+                    <p>We detected a new login to your account. Here are the details:</p>
+                    
+                    <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                        <h3 style="margin-top: 0; color: #495057;">Login Details:</h3>
+                        <p><strong>Time:</strong> ' . $loginTime . '</p>
+                        <p><strong>IP Address:</strong> ' . $ipAddress . '</p>
+                        <p><strong>Device/Browser:</strong> ' . $userAgent . '</p>
+                    </div>
+                    
+                    <p>If this was you, you can safely ignore this email.</p>
+                    <p>If you don\'t recognize this login, please secure your account immediately by changing your password.</p>
+                    
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="http://localhost:8080/login" style="background-color: #dc3545; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block;">Secure My Account</a>
+                    </div>
+                    
+                    <p>Best regards,<br>The ' . config('Email')->fromName . ' Security Team</p>
+                    <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+                    <p style="font-size: 12px; color: #666;">This email was sent to ' . $userEmail . '</p>
+                </div>
+            </body>
+            </html>';
             
             // Set the email body
-            $this->email->setMessage($emailBody);
+            $this->email->setMessage($message);
             
             // Send the email
             $result = $this->email->send();
