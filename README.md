@@ -1,148 +1,208 @@
-# CodeIgniter 4 Boilerplate
+# CodeIgniter 4 Boilerplate with Shield Authentication
 
-This is a starter boilerplate for CodeIgniter 4 projects, designed to provide a solid foundation for new applications. It includes a variety of pre-configured features to help you get up and running quickly.
+A complete, ready-to-use CodeIgniter 4 boilerplate with Shield authentication, admin panel, and POS system.
 
-## Getting Started
+## 🚀 Features
 
-### Prerequisites
+- **CodeIgniter 4.6.3** - Latest stable version
+- **Shield Authentication** - Complete user authentication system
+- **Admin Panel** - User management and reports
+- **POS System** - Point of Sale functionality
+- **Database Migrations** - Pre-configured database structure
+- **Custom Views** - Modern, responsive UI components
+- **Settings Management** - Configurable application settings
 
--   PHP 8.1 or higher
--   Composer
--   SQLite3 PHP Extension
+## 📋 Prerequisites
 
-### Installation
+- PHP 8.1 or higher
+- MySQL 5.7+ or MariaDB 10.3+
+- Composer
+- XAMPP (recommended for Windows)
 
-1.  **Clone the repository:**
-    ```bash
-    git clone <repository_url>
-    ```
+## 🛠️ Installation
 
-2.  **Navigate to the project directory:**
-    ```bash
-    cd ci4_boilerplate
-    ```
+### Quick Setup
 
-3.  **Install dependencies:**
-    ```bash
-    composer install
-    ```
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/patelarjunphil-ai/ci4_boilerplate_002.git my_project
+   cd my_project
+   ```
 
-4.  **Copy the environment file:**
-    ```bash
-    cp env .env
-    ```
+2. **Install dependencies**
+   ```bash
+   composer install
+   ```
 
-5.  **Run the database migrations:**
-    ```bash
-    php spark migrate
-    ```
+3. **Setup environment**
+   ```bash
+   cp env .env
+   # Edit .env file with your database settings
+   ```
 
-6.  **Start the development server:**
-    ```bash
-    php spark serve
-    ```
+4. **Create database**
+   ```bash
+   mysql -u root -e "CREATE DATABASE my_project;"
+   ```
 
-The application will be available at `http://localhost:8080`.
+5. **Run migrations**
+   ```bash
+   php spark migrate
+   ```
 
-## Features
+6. **Start development server**
+   ```bash
+   php spark serve
+   ```
 
-### Authentication (Shield)
+### Automated Setup (Windows)
 
-This boilerplate uses [CodeIgniter Shield](https://shield.codeigniter.com/) for authentication. It has been configured to use custom views for login and registration.
-
--   **Login View:** `app/Views/auth/login.php`
--   **Registration View:** `app/Views/auth/register.php`
-
-The authentication routes are automatically handled by Shield. You can view them by running `php spark routes`.
-
-### User Roles and Permissions
-
-User roles (Groups) and permissions are defined in the `app/Config/AuthGroups.php` file. You can easily add, remove, or modify groups and permissions in this file.
-
-**Example Group:**
-
-```php
-'admin' => [
-    'title'       => 'Admin',
-    'description' => 'Administrators of the site.',
-],
+Run the provided batch file:
+```bash
+setup_new_ci4.bat
 ```
 
-**Example Permission:**
+## ⚙️ Configuration
 
-```php
-'admin.access' => 'Can access the sites admin area',
+### Environment Variables (.env)
+
+```env
+CI_ENVIRONMENT = development
+app.baseURL = 'http://localhost:8080/'
+database.default.hostname = localhost
+database.default.database = your_database_name
+database.default.username = root
+database.default.password = 
+database.default.DBDriver = MySQLi
+database.default.port = 3306
+encryption.key = your_encryption_key_here
 ```
 
-The `permission` filter is used in the `app/Config/Routes.php` file to protect routes.
+### Database Configuration
 
-**Example Route Protection:**
+The boilerplate includes these database tables:
+- `users` - User accounts
+- `auth_identities` - Authentication identities
+- `auth_logins` - Login attempts
+- `auth_groups_users` - User groups
+- `auth_permissions_users` - User permissions
+- `site_settings` - Application settings
+- `navigation_links` - Navigation menu
 
-```php
-$routes->group('admin', ['filter' => 'permission:admin.access'], function ($routes) {
-    // Admin routes here
-});
+## 🎯 Usage
+
+### Accessing the Application
+
+- **Main Application**: `http://localhost:8080`
+- **Admin Panel**: `http://localhost:8080/admin`
+- **POS System**: `http://localhost:8080/pos`
+
+### Creating Users
+
+1. Register a new user at `/register`
+2. Assign admin permissions via database or admin panel
+3. Access admin features at `/admin`
+
+### Customization
+
+- **Controllers**: Add new controllers in `app/Controllers/`
+- **Views**: Modify views in `app/Views/`
+- **Models**: Create models in `app/Models/`
+- **Migrations**: Add database migrations in `app/Database/Migrations/`
+
+## 📁 Project Structure
+
+```
+ci4_boilerplate/
+├── app/
+│   ├── Controllers/          # Application controllers
+│   │   ├── Admin/           # Admin panel controllers
+│   │   ├── Home.php         # Home controller
+│   │   └── POS.php          # POS system controller
+│   ├── Views/               # View templates
+│   │   ├── admin/           # Admin panel views
+│   │   ├── auth/            # Authentication views
+│   │   └── layout.php       # Main layout
+│   ├── Models/              # Data models
+│   ├── Database/            # Migrations and seeds
+│   └── Config/              # Configuration files
+├── public/                  # Web-accessible files
+├── writable/                # Writable directories
+└── vendor/                  # Composer dependencies
 ```
 
-### User Management (Manual CRUD)
+## 🔧 Available Commands
 
-A manual CRUD (Create, Read, Update, Delete) implementation for managing users is included. You can access it at `/admin/users`.
+```bash
+# Start development server
+php spark serve
 
--   **Controller:** `app/Controllers/Admin/Users.php`
--   **Model:** `app/Models/UserModel.php`
--   **Views:** `app/Views/admin/users/`
+# Run database migrations
+php spark migrate
 
-This feature is protected by the `admin.access` permission.
+# Create new migration
+php spark make:migration CreateTableName
 
-### Custom Settings Library
+# Create new controller
+php spark make:controller ControllerName
 
-A custom, database-driven settings library is included. It uses the `site_settings` table to store key-value pairs.
+# Create new model
+php spark make:model ModelName
 
-**Service:** `App\Services\SettingsService`
-
-You can access the settings service from anywhere in your application using the `service()` helper:
-
-**Get a setting:**
-
-```php
-$siteName = service('settings')->get('site_name', 'My Awesome Site');
+# Setup Shield authentication
+php spark shield:setup
 ```
 
-**Set a setting:**
+## 🛡️ Security Features
 
-```php
-service('settings')->set('site_name', 'My New Site Name');
+- **Shield Authentication** - Secure authentication system
+- **CSRF Protection** - Cross-site request forgery protection
+- **Input Validation** - Comprehensive input validation
+- **SQL Injection Prevention** - Parameterized queries
+- **XSS Protection** - Output escaping
+
+## 📊 Admin Features
+
+- **User Management** - Create, edit, delete users
+- **Reports** - System reports and analytics
+- **Settings** - Application configuration
+- **Navigation** - Menu management
+
+## 🛒 POS System
+
+- **Product Management** - Add, edit, delete products
+- **Sales Processing** - Handle transactions
+- **Inventory Tracking** - Stock management
+- **Reports** - Sales reports and analytics
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## 📄 License
+
+This project is open-sourced software licensed under the [MIT license](LICENSE).
+
+## 🆘 Support
+
+For support and questions:
+- Create an issue on GitHub
+- Check the [CodeIgniter 4 documentation](https://codeigniter.com/user_guide/)
+- Visit the [Shield documentation](https://codeigniter4.github.io/shield/)
+
+## 🔄 Updates
+
+To update your project:
+
+```bash
+git pull origin main
+composer update
+php spark migrate
 ```
 
-### Custom Navigation Library
+---
 
-A custom, permission-aware navigation library is included. It builds a navigation menu based on the user's roles and permissions.
-
-**View Cell:** `App\Cells\NavbarCell`
-
-The navigation links are stored in the `navigation_links` table. The `permission_key` column is used to determine if a user can see a particular link.
-
-You can use the `NavbarCell` in your layout files to display the navigation menu:
-
-```php
-<?= view_cell('App\Cells\NavbarCell') ?>
-```
-
-### Starter Modules
-
-#### Reports
-
-A starter module for reports is included at `/admin/reports`. It includes a simple example of how to use Chart.js to display data from the database.
-
--   **Controller:** `app/Controllers/Admin/Reports.php`
--   **View:** `app/Views/admin/reports/overview.php`
-
-This feature is protected by the `admin.access` permission.
-
-#### Point of Sale (POS)
-
-A starter module for a Point of Sale system is included at `/pos`. This is a placeholder and does not contain any functionality.
-
--   **Controller:** `app/Controllers/POS.php`
-
-This feature is protected by the `pos.use` permission.
+**Happy Coding!** 🎉
