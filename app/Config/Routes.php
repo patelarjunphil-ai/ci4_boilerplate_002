@@ -7,6 +7,29 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 
+// CUSTOM AUTHENTICATION ROUTES
+// We override Shield's default routes with our custom AuthController
+// This allows us to add custom email notifications and enhanced UX
+
+// Login routes
+$routes->get('login', 'AuthController::login');
+$routes->post('login', 'AuthController::login');
+
+// Registration routes  
+$routes->get('register', 'AuthController::register');
+$routes->post('register', 'AuthController::register');
+
+// Logout route
+$routes->get('logout', 'AuthController::logout');
+
+// Forgot password routes
+$routes->get('forgot-password', 'AuthController::forgotPassword');
+$routes->post('forgot-password', 'AuthController::forgotPassword');
+
+// Email verification route
+$routes->get('verify-email', 'AuthController::verifyEmail');
+
+// Include Shield's default routes for other functionality
 service('auth')->routes($routes);
 
 // Admin Routes

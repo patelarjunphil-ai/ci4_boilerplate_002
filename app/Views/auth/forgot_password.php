@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $title ?? 'Login' ?></title>
+    <title><?= $title ?? 'Forgot Password' ?></title>
     <style>
-        /* MODERN LOGIN FORM STYLES */
+        /* MODERN FORGOT PASSWORD FORM STYLES */
         * {
             margin: 0;
             padding: 0;
@@ -22,7 +22,7 @@
             padding: 20px;
         }
         
-        .login-container {
+        .forgot-container {
             background: white;
             padding: 40px;
             border-radius: 15px;
@@ -32,21 +32,22 @@
             position: relative;
         }
         
-        .login-header {
+        .forgot-header {
             text-align: center;
             margin-bottom: 30px;
         }
         
-        .login-header h1 {
+        .forgot-header h1 {
             color: #333;
             font-size: 28px;
             font-weight: 300;
             margin-bottom: 10px;
         }
         
-        .login-header p {
+        .forgot-header p {
             color: #666;
             font-size: 14px;
+            line-height: 1.5;
         }
         
         .form-group {
@@ -71,38 +72,6 @@
             background-color: #f8f9fa;
         }
         
-        /* PASSWORD FIELD WITH TOGGLE ICON */
-        .password-field {
-            position: relative;
-        }
-        
-        .password-field input {
-            padding-right: 45px; /* Space for the toggle icon */
-        }
-        
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #666;
-            font-size: 18px;
-            padding: 5px;
-            transition: color 0.3s ease;
-        }
-        
-        .password-toggle:hover {
-            color: #667eea;
-        }
-        
-        .password-toggle:focus {
-            outline: none;
-            color: #667eea;
-        }
-        
         .form-group input:focus {
             outline: none;
             border-color: #667eea;
@@ -110,7 +79,7 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
         
-        .login-button {
+        .reset-button {
             width: 100%;
             padding: 12px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -124,12 +93,12 @@
             margin-top: 10px;
         }
         
-        .login-button:hover {
+        .reset-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
         
-        .login-button:active {
+        .reset-button:active {
             transform: translateY(0);
         }
         
@@ -169,33 +138,6 @@
             border: 1px solid #c3e6cb;
         }
         
-        .remember-forgot {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 15px 0;
-            font-size: 14px;
-        }
-        
-        .remember-me {
-            display: flex;
-            align-items: center;
-        }
-        
-        .remember-me input {
-            margin-right: 8px;
-            width: auto;
-        }
-        
-        .forgot-password {
-            color: #667eea;
-            text-decoration: none;
-        }
-        
-        .forgot-password:hover {
-            color: #764ba2;
-        }
-        
         .divider {
             text-align: center;
             margin: 20px 0;
@@ -221,14 +163,53 @@
             position: relative;
             z-index: 2;
         }
+        
+        .info-notice {
+            background-color: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 12px;
+            color: #1565c0;
+        }
+        
+        .info-notice h4 {
+            margin: 0 0 8px 0;
+            color: #1565c0;
+            font-size: 13px;
+        }
+        
+        .back-to-login {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .back-to-login a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            transition: color 0.3s ease;
+        }
+        
+        .back-to-login a:hover {
+            color: #764ba2;
+        }
+        
+        .back-to-login a::before {
+            content: '←';
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <!-- LOGIN HEADER -->
-        <div class="login-header">
-            <h1>Welcome Back</h1>
-            <p>Sign in to your account to continue</p>
+    <div class="forgot-container">
+        <!-- FORGOT PASSWORD HEADER -->
+        <div class="forgot-header">
+            <h1>Forgot Password?</h1>
+            <p>No worries! Enter your email address and we'll send you a link to reset your password.</p>
         </div>
         
         <!-- SUCCESS/ERROR MESSAGES -->
@@ -254,10 +235,19 @@
             </div>
         <?php endif; ?>
         
-        <!-- LOGIN FORM -->
-    <form action="<?= url_to('login') ?>" method="post">
-        <?= csrf_field() ?>
-
+        <!-- INFORMATION NOTICE -->
+        <div class="info-notice">
+            <h4>📧 What happens next?</h4>
+            <p>
+                If an account with that email exists, we'll send you a password reset link. 
+                The link will be valid for 1 hour for security reasons.
+            </p>
+        </div>
+        
+        <!-- FORGOT PASSWORD FORM -->
+        <form action="<?= url_to('forgot-password') ?>" method="post" id="forgotForm">
+            <?= csrf_field() ?>
+            
             <!-- EMAIL FIELD -->
             <div class="form-group">
                 <label for="email">Email Address</label>
@@ -272,70 +262,32 @@
                 >
             </div>
             
-            <!-- PASSWORD FIELD -->
-            <div class="form-group">
-                <label for="password">Password</label>
-                <div class="password-field">
-                    <input 
-                        type="password" 
-                        name="password" 
-                        id="password"
-                        placeholder="Enter your password"
-                        required
-                        autocomplete="current-password"
-                    >
-                    <button type="button" class="password-toggle" onclick="togglePassword('password')">
-                        👁️
-                    </button>
-                </div>
-            </div>
-            
-            <!-- REMEMBER ME & FORGOT PASSWORD -->
-            <div class="remember-forgot">
-                <div class="remember-me">
-                    <input type="checkbox" name="remember" id="remember" value="1">
-                    <label for="remember">Remember me</label>
-                </div>
-                <a href="<?= url_to('forgot-password') ?>" class="forgot-password">
-                    Forgot password?
-                </a>
-            </div>
-            
-            <!-- LOGIN BUTTON -->
-            <button type="submit" class="login-button">
-                Sign In
+            <!-- RESET BUTTON -->
+            <button type="submit" class="reset-button">
+                Send Reset Link
             </button>
-    </form>
+        </form>
         
         <!-- FORM LINKS -->
         <div class="form-links">
             <div class="divider">
-                <span>Don't have an account?</span>
+                <span>Remember your password?</span>
             </div>
-            <a href="<?= url_to('register') ?>">Create Account</a>
+            <a href="<?= url_to('login') ?>">Back to Sign In</a>
+        </div>
+        
+        <!-- BACK TO LOGIN -->
+        <div class="back-to-login">
+            <a href="<?= url_to('login') ?>">Back to Login</a>
         </div>
     </div>
     
     <!-- JAVASCRIPT FOR ENHANCED UX -->
     <script>
-        // Password toggle functionality
-        function togglePassword(fieldId) {
-            const passwordField = document.getElementById(fieldId);
-            const toggleButton = passwordField.nextElementSibling;
-            
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                toggleButton.innerHTML = '🙈'; // Hide icon
-            } else {
-                passwordField.type = 'password';
-                toggleButton.innerHTML = '👁️'; // Show icon
-            }
-        }
-        
-        // Add loading state to login button
-        document.querySelector('form').addEventListener('submit', function() {
-            const button = document.querySelector('.login-button');
-            button.textContent = 'Signing In...';
+        // Add loading state to reset button
+        document.getElementById('forgotForm').addEventListener('submit', function() {
+            const button = document.querySelector('.reset-button');
+            button.textContent = 'Sending...';
             button.disabled = true;
         });
         
@@ -348,6 +300,18 @@
             input.addEventListener('blur', function() {
                 this.parentElement.classList.remove('focused');
             });
+        });
+        
+        // Email validation feedback
+        document.getElementById('email').addEventListener('input', function() {
+            const email = this.value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (email && !emailRegex.test(email)) {
+                this.style.borderColor = '#dc3545';
+            } else {
+                this.style.borderColor = '#e1e5e9';
+            }
         });
     </script>
 </body>

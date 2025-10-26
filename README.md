@@ -40,17 +40,24 @@ A complete, ready-to-use CodeIgniter 4 boilerplate with Shield authentication, a
    # Edit .env file with your database settings
    ```
 
-4. **Create database**
+4. **Generate encryption key**
+   ```bash
+   php spark key:generate
+   ```
+   Copy the output and paste it into your `.env` file.
+
+5. **Create database**
    ```bash
    mysql -u root -e "CREATE DATABASE my_project;"
    ```
 
-5. **Run migrations**
+6. **Run Shield setup and database migrations**
    ```bash
+   php spark shield:setup
    php spark migrate
    ```
 
-6. **Start development server**
+7. **Start development server**
    ```bash
    php spark serve
    ```
